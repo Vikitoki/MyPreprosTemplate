@@ -1,0 +1,40 @@
+
+/* Слайдер */
+
+.slick-slider {
+	min-width: 0;
+	overflow: hidden;
+}
+
+/* Инициализация*/
+.slick-slider.slick-initialized {
+	.reviews__text {
+		background: none;
+		color: #fff;
+	}
+}
+
+/* Итем слайдера */
+&__item,
+&__content {
+	height: 100%;
+}
+
+/* Убираем outline */
+.slick-slide:focus {
+	outline: none;
+}
+
+/* Ограничивающая оболочка */
+.slick-list {
+	width: 100%;
+	height: 100%;
+}
+
+/* Лента слайдов */
+.slick-track {
+	height: 100%;
+	display: flex;
+	align-items: center;
+}
+

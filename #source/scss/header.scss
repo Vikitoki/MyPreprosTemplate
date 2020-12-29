@@ -1,0 +1,58 @@
+//====================================================================================================
+header {
+}
+//====================================================================================================
+
+// &__icon {
+// 	display: none;
+// 	width: 30px;
+// 	height: 20px;
+
+// 	cursor: pointer;
+
+// 	span {
+// 		display: block;
+// 		margin-bottom: 5px;
+// 		width: 100%;
+// 		height: 2px;
+
+// 		background-color: #000;
+
+// 		transition: transform 0.2s linear, opacity 0.2s linear;
+// 	}
+// 	&.active {
+// 		position: relative;
+// 		span {
+// 			&:nth-child(2) {
+// 				opacity: 0;
+// 			}
+// 			&:nth-child(1),
+// 			&:nth-child(3) {
+// 				position: absolute;
+// 				top: 50%;
+// 				left: 0;
+// 				z-index: 1;
+// 			}
+
+// 			&:nth-child(1) {
+// 				transform: rotate(45deg);
+// 			}
+// 			&:nth-child(3) {
+// 				transform: rotate(-45deg);
+// 			}
+// 		}
+// 	}
+// 	@media (max-width: $md2+px) {
+// 		display: block;
+// 	}
+// }
+
+// Adapt for iphone 5
+
+// @media (max-width: $md2 + px) {
+// 	min-height: 100vh;
+// 	height: 100%;
+// 	padding-top: 130px;
+
+// 	overflow: auto;
+// }
