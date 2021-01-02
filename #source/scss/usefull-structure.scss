@@ -1,17 +1,15 @@
-//  Checkbox input =================================
+//  Input + label ========================================================
 
-.checkbox-filter {
+.checkbox {
   display: flex;
   align-items: center;
 
   &__input {
     position: absolute;
-    top: 0;
-    left: 0;
-    opacity: 0;
-    visibility: hidden;
+    -webkit-appearance: none;
+    appearance: none;
 
-    &:checked + .checkbox-filter__text {
+    &:checked + .checkbox__text {
       &::before {
         border-color: #53b5de;
       }
@@ -36,8 +34,8 @@
 
     &:hover {
       text-decoration: underline;
-		}
-		
+    }
+
     &::before {
       content: "";
       display: block;
@@ -60,10 +58,40 @@
       position: absolute;
       top: 3px;
       left: 3px;
+      z-index: 1;
 
       background-color: transparent;
 
       transition: background-color 0.2s ease;
     }
   }
+}
+
+//  Standart for img ===============================================================
+
+.example {
+  padding-bottom: 60%;
+
+  overflow: hidden;
+  position: relative;
+
+  img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+  }
+}
+
+//  Get text with ... ==================================================================
+
+.example {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
