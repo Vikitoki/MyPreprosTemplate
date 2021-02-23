@@ -77,3 +77,41 @@ $("[data-scrollspy]").each(function () {
     $(`#navHeader [data-scroll-to = "${sectionId}"]`).removeClass("active");
   }
 });
+
+//   Filter group ===============================================
+
+let cat = $("[data-filter]");
+
+cat.on("click", function (event) {
+  event.preventDefault();
+
+  let catBox = $(this).data("filter");
+
+  $("[data-cat]").animate({ opacity: "0" }, 200);
+
+  if (catBox === "all") {
+    setTimeout(function () {
+      $("[data-cat]").css({
+        display: "block",
+        opacity: "1",
+      });
+    }, 300);
+  } else {
+    $("[data-cat]").each(function () {
+      let catWork = $(this).data("cat");
+
+      if (catWork != catBox) {
+        $(this).animate({ opacity: "0" }, 200);
+        setTimeout(function () {
+          $(`[data-cat = '${catWork}']`).css("display", "none");
+        }, 300);
+      } else {
+        setTimeout(function () {
+          $(`[data-cat = '${catWork}']`).css("display", "block");
+        }, 300);
+
+        $(this).animate({ opacity: "1" }, 200);
+      }
+    });
+  }
+});

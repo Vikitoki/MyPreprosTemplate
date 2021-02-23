@@ -1,72 +1,186 @@
-// Burger btn ===============================================
 
-const burgerMenuBtn = document.querySelector("#burgerMenu"),
-  headerMenuBody = document.querySelector(".menu-header__body"),
+// Header =================================================================================================
+
+const burgerMenuBtn = document.querySelector(".menu-header__icon"),
+  headerMobileMenu = document.querySelector(".header__mobile-menu"),
   header = document.querySelector(".header");
 
 burgerMenuBtn.addEventListener("click", function (event) {
   event.preventDefault();
 
-  headerMenuBody.classList.toggle("active");
-  header.classList.toggle("active");
-  this.classList.toggle("active");
+  toggleHeader();
 });
 
-//   Filter group ===============================================
+window.addEventListener("resize", function () {
+  toggleHeader();
+});
 
-let cat = $("[data-filter]");
-
-cat.on("click", function (event) {
-  event.preventDefault();
-
-  let catBox = $(this).data("filter");
-
-  $("[data-cat]").animate({ opacity: "0" }, 200);
-
-  if (catBox === "all") {
-    setTimeout(function () {
-      $("[data-cat]").css({
-        display: "block",
-        opacity: "1",
-      });
-    }, 300);
-  } else {
-    $("[data-cat]").each(function () {
-      let catWork = $(this).data("cat");
-
-      if (catWork != catBox) {
-        $(this).animate({ opacity: "0" }, 200);
-        setTimeout(function () {
-          $(`[data-cat = '${catWork}']`).css("display", "none");
-        }, 300);
-      } else {
-        setTimeout(function () {
-          $(`[data-cat = '${catWork}']`).css("display", "block");
-        }, 300);
-
-        $(this).animate({ opacity: "1" }, 200);
-      }
-    });
+document.documentElement.addEventListener("click", function (event) {
+  if (event.target && !event.target.closest(".header")) {
+    headerMobileMenu.classList.remove("active");
+    header.classList.remove("active");
+    burgerMenuBtn.classList.remove("active");
+    document.body.classList.remove("lock");
   }
 });
 
-//  Scroll section  ===============================================
+function toggleHeader() {
+  headerMobileMenu.classList.toggle("active");
+  header.classList.toggle("active");
+  burgerMenuBtn.classList.toggle("active");
+  document.body.classList.toggle("lock");
+}
 
-$("[data-section]").on("click", function (event) {
-  event.preventDefault();
+// Tabs ===============================================================================================
 
-  let dataBox = $(this).data("section"),
-    dataOffSet = $(dataBox).offset().top;
+const contentBlocks = document.querySelectorAll(".tabcontent"),
+  tabsItems = document.querySelectorAll(".tabheader__item"),
+  tabsParent = document.querySelector(".tabheader__items");
 
-  $("html , body").animate(
-    {
-      scrollTop: dataOffSet - $(window).innerHeight() / 5,
-    },
-    700
-  );
+function hideContentTabs() {
+  contentBlocks.forEach((item) => item.classList.add("hide"));
+  tabsItems.forEach((item) => item.classList.remove("tabheader__item_active"));
+}
+
+function showContentTabs(i = 0) {
+  contentBlocks[i].classList.remove("hide");
+  contentBlocks[i].classList.add("show");
+
+  tabsItems[i].classList.add("tabheader__item_active");
+}
+
+function choosePreferedCategory() {
+  tabsParent.addEventListener("click", function (event) {
+    let target = event.target;
+
+    if (target && target.classList.contains("tabheader__item")) {
+      tabsItems.forEach((item, index) => {
+        if (target === item) {
+          hideContentTabs();
+          showContentTabs(index);
+        }
+      });
+    }
+  });
+}
+
+hideContentTabs();
+showContentTabs();
+choosePreferedCategory();
+
+// Timer ================================================================================================
+
+const deadline = "2020-12-11";
+
+function getTimeRemaining(endtime) {
+  const deltaTime = Date.parse(endtime) - Date.parse(new Date()),
+    days = Math.floor(deltaTime / (1000 * 60 * 60 * 24)),
+    hours = Math.floor((deltaTime / (1000 * 60 * 60)) % 24),
+    minutes = Math.floor((deltaTime / (1000 * 60)) % 60),
+    seconds = Math.floor((deltaTime / 1000) % 60);
+
+  return {
+    total: deltaTime,
+    days,
+    hours,
+    minutes,
+    seconds,
+  };
+}
+
+function getZero(number) {
+  if (+number <= 9) {
+    return `0${number}`;
+  } else {
+    return number;
+  }
+}
+
+function setClock(selector, endtime) {
+  const parent = document.querySelector(selector),
+    days = parent.querySelector("#days"),
+    hours = parent.querySelector("#hours"),
+    minutes = parent.querySelector("#minutes"),
+    seconds = parent.querySelector("#seconds"),
+    timeInterval = setInterval(updateClock, 1000);
+
+  updateClock();
+
+  function updateClock() {
+    const t = getTimeRemaining(endtime);
+
+    days.textContent = getZero(t.days);
+    hours.textContent = getZero(t.hours);
+    minutes.textContent = getZero(t.minutes);
+    seconds.textContent = getZero(t.seconds);
+
+    if (+t.total <= 0) {
+      clearInterval(timeInterval);
+    }
+  }
+}
+
+setClock(".timer", deadline);
+
+// Modal Window ======================================================================================
+
+// Values
+
+const openModalBtns = document.querySelectorAll("[data-modal]"),
+  modalWindow = document.querySelector(".modal");
+
+// Main
+
+openModalBtns.forEach((item) =>
+  item.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    openModal();
+  })
+);
+
+modalWindow.addEventListener("click", function (event) {
+  if (
+    event.target === modalWindow ||
+    event.target.getAttribute("data-close") === ""
+  ) {
+    closeModal();
+  }
 });
 
-//  Spy scroll section  ===============================================
+document.addEventListener("keydown", function (event) {
+  if (modalWindow.classList.contains("show") && event.code === "Escape") {
+    closeModal();
+  }
+});
+
+const modalTimerId = setTimeout(openModal, 60000);
+
+window.addEventListener("scroll", showModalByScroll);
+
+// Function
+
+function closeModal() {
+  modalWindow.classList.remove("show");
+  document.body.classList.remove("no_scroll");
+}
+
+function openModal() {
+  modalWindow.classList.add("show");
+  document.body.classList.add("no_scroll");
+
+  clearInterval(modalTimerId);
+}
+
+function showModalByScroll() {
+  const htmlPage = document.documentElement;
+  if (htmlPage.scrollTop + htmlPage.clientHeight >= htmlPage.scrollHeight) {
+    openModal();
+    window.removeEventListener("scroll", showModalByScroll);
+  }
+}
+
+//  Spy scroll section  ======================================================================================
 
 const ScrollSpySections = document.querySelectorAll("[data-scrollspy]"),
   NavHeaderLinks = document.querySelectorAll("[data-scroll-to]");
@@ -106,25 +220,6 @@ function scrollSpy() {
   });
 }
 
-// Turn img to background ===========================================
-
-const ibgBlocks = document.querySelectorAll("._ibg");
-
-function setImgToBackground() {
-  ibgBlocks.forEach((block) => {
-    let image = block.document.querySelector("img");
-
-    block.classList.cssText = `
-	background: url(${image.getAttribute("src")}) center no-repeat';
-	background-size : cover;
-`;
-
-    image.style.display = "none";
-  });
-}
-
-setImgToBackground();
-
 // Check categories for many select================================================
 
 let categoriesInputs = document.querySelectorAll(".checkbox__input"),
@@ -159,183 +254,34 @@ categoriesInputs.forEach((input, index) => {
 
 // Quantity ===================================================================
 
-const quantityArrowPrev = document.querySelector(".quantity__arrow_prev"),
-  quantityArrowNext = document.querySelector(".quantity__arrow_next"),
-  quantityInput = document.querySelector(".quantity__input input");
+const quantityArrowsPrev = document.querySelectorAll(".quantity__arrow_prev"),
+  quantityArrowsNext = document.querySelectorAll(".quantity__arrow_next"),
+  quantityInputs = document.querySelectorAll(".quantity__input input");
 
-quantityArrowPrev.addEventListener("click", function (event) {
-  event.preventDefault();
+quantityArrowsPrev.forEach((arrow, index) => {
+  arrow.addEventListener("click", function (event) {
+    event.preventDefault();
 
-  let inputValue = quantityInput.value;
+    let inputValue = quantityInputs[index].value;
 
-  console.log(inputValue);
-  if (+inputValue <= 0) {
-    return;
-  }
+    if (+inputValue <= 0) {
+      return;
+    }
 
-  quantityInput.value = --inputValue;
+    quantityInputs[index].value = --inputValue;
+  });
 });
 
-quantityArrowNext.addEventListener("click", function (event) {
-  event.preventDefault();
+quantityArrowsNext.forEach((arrow, index) => {
+  arrow.addEventListener("click", function (event) {
+    event.preventDefault();
 
-  let inputValue = quantityInput.value;
+    let inputValue = quantityInputs[index].value;
 
-  console.log(inputValue);
-  if (+inputValue < 0) {
-    return;
-  }
+    if (+inputValue < 0) {
+      return;
+    }
 
-  quantityInput.value = ++inputValue;
+    quantityInputs[index].value = ++inputValue;
+  });
 });
-
-// Bild Swiper Slider ============================================================================
-
-// Example =====================
-// <div class = "_swiper"></div>
-
-// Default
-
-let sliders = document.querySelectorAll("._swiper");
-
-if (sliders) {
-  for (let index = 0; index < sliders.length; index++) {
-    let slider = sliders[index];
-
-    if (!slider.classList.contains("swiper-bild")) {
-      // Берутся дочерние элементы слайдера
-      let sliderItems = slider.children;
-
-      // Дочерним элементам слайдера присваевается классы слайдов
-      if (sliderItems) {
-        for (let index = 0; index < sliderItems.length; index++) {
-          let el = sliderItems[index];
-          el.classList.add("swiper-slide");
-        }
-      }
-
-      // Создаётся обёртка и в неё погружается контент слайда
-      let sliderContent = slider.innerHTML;
-
-      let sliderContainer = document.createElement("div");
-      sliderContainer.classList.add("swiper-container");
-
-      let sliderWrapper = document.createElement("div");
-      sliderWrapper.classList.add("swiper-wrapper");
-
-      sliderWrapper.innerHTML = sliderContent;
-      sliderContainer.append(sliderWrapper);
-
-      slider.innerHTML = "";
-      slider.append(sliderContainer);
-      slider.classList.add("swiper-bild");
-
-      // slider.innerHTML = "";
-      // slider.appendChild(sliderWrapper);
-      // slider.classList.add("swiper-bild");
-
-      if (slider.classList.contains("_swiper_scroll")) {
-        let sliderScroll = document.createElement("div");
-        sliderScroll.classList.add("swiper-scrollbar");
-        slider.appendChild(sliderScroll);
-      }
-    }
-  }
-}
-
-// Scroll
-
-let sliderScrollItems = document.querySelectorAll("._swiper_scroll");
-
-if (sliderScrollItems.length > 0) {
-  for (let index = 0; index < sliderScrollItems.length; index++) {
-    const sliderScrollItem = sliderScrollItems[index];
-    const sliderScrollBar = sliderScrollItem.querySelector(".swiper-scrollbar");
-    const sliderScroll = new Swiper(sliderScrollItem, {
-      direction: "vertical",
-      slidesPerView: "auto",
-      freeMode: true,
-      scrollbar: {
-        el: sliderScrollBar,
-        draggable: true,
-        snapOnRelease: false,
-      },
-      mousewheel: {
-        releaseOnEdges: true,
-      },
-    });
-    sliderScroll.scrollbar.updateSize();
-  }
-}
-
-//Slides element with effect ========================================================================================
-
-// Up ========================================================
-
-let _slideUp = (target, duration = 500) => {
-  target.style.transitionProperty = "height, margin, padding";
-  target.style.transitionDuration = duration + "ms";
-  target.style.height = target.offsetHeight + "px";
-  target.style.overflow = "hidden";
-  target.style.height = 0;
-  target.style.paddingTop = 0;
-  target.style.paddingBottom = 0;
-  target.style.marginTop = 0;
-  target.style.marginBottom = 0;
-  window.setTimeout(() => {
-    target.style.display = "none";
-    target.style.removeProperty("height");
-    target.style.removeProperty("padding-top");
-    target.style.removeProperty("padding-bottom");
-    target.style.removeProperty("margin-top");
-    target.style.removeProperty("margin-bottom");
-    target.style.removeProperty("overflow");
-    target.style.removeProperty("transition-duration");
-    target.style.removeProperty("transition-property");
-    target.classList.remove("_slide");
-  }, duration);
-};
-
-// Down ========================================================
-
-let _slideDown = (target, duration = 500) => {
-  target.style.removeProperty("display");
-  let display = window.getComputedStyle(target).display;
-  if (display === "none") display = "block";
-
-  target.style.display = display;
-  let height = target.offsetHeight;
-  target.style.overflow = "hidden";
-  target.style.height = 0;
-  target.style.paddingTop = 0;
-  target.style.paddingBottom = 0;
-  target.style.marginTop = 0;
-  target.style.marginBottom = 0;
-  target.style.transitionProperty = "height, margin, padding";
-  target.style.transitionDuration = duration + "ms";
-  target.style.height = height + "px";
-  target.style.removeProperty("padding-top");
-  target.style.removeProperty("padding-bottom");
-  target.style.removeProperty("margin-top");
-  target.style.removeProperty("margin-bottom");
-  window.setTimeout(() => {
-    target.style.removeProperty("height");
-    target.style.removeProperty("overflow");
-    target.style.removeProperty("transition-duration");
-    target.style.removeProperty("transition-property");
-    target.classList.remove("_slide");
-  }, duration);
-};
-
-// Toggle ========================================================
-
-let _slideToggle = (target, duration = 500) => {
-  if (!target.classList.contains("_slide")) {
-    target.classList.add("_slide");
-    if (window.getComputedStyle(target).display === "none") {
-      return _slideDown(target, duration);
-    } else {
-      return _slideUp(target, duration);
-    }
-  }
-};

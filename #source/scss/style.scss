@@ -1,183 +1,34 @@
-//<МИКСИНЫ>
-
-//Адаптивное свойство
+//<ПЕРЕМЕННЫЕ>
+$minWidth: 320px;
 $maxWidth: 1920;
 $maxWidthContainer: 1170;
-
-@mixin adaptiv-value($property, $startSize, $minSize, $type) {
-  $addSize: $startSize - $minSize;
-  @if $type==1 {
-    //Только если меньше контейнера
-    #{$property}: $startSize + px;
-    @media (max-width: #{$maxWidthContainer + px}) {
-      #{$property}: calc(
-        #{$minSize + px} + #{$addSize} *
-          ((100vw - 320px) / #{$maxWidthContainer - 320})
-      );
-    }
-  } @else if $type==2 {
-    //Только если больше контейнера
-    #{$property}: $startSize + px;
-    @media (min-width: #{$maxWidthContainer + px}) {
-      #{$property}: calc(
-        #{$minSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth - 320})
-      );
-    }
-  } @else {
-    //Всегда
-    #{$property}: calc(
-      #{$minSize + px} + #{$addSize} * ((100vw - 320px) / #{$maxWidth - 320})
-    );
-  }
-}
-
-//</МИКСИНЫ>
-
-//<Подключаем шрифты>
-
-//</Подключаем шрифты>
-
-//<ШРИФТ ПО УМОЛЧАНИЮ>
-$fontfamily: "";
-//</ШРИФТ ПО УМОЛЧАНИЮ>
-
-//<ПЕРЕМЕННЫЕ>
-$minwidth: 320px;
-$mw: 1170;
-$md1: $mw + 12;
-$md2: 992.98;
+$md1: $maxWidthContainer + 12;
+$md2: 991.98;
 $md3: 767.98;
 $md4: 479.98;
 //</ПЕРЕМЕННЫЕ>
 
-//<ОБНУЛЕНИЕ, ОБЩИЕ ПАРАМЕТРЫ>
-* {
-  padding: 0px;
-  margin: 0px;
-  border: 0px;
-}
-*,
-*:before,
-*:after {
-  -moz-box-sizing: border-box;
-  -webkit-box-sizing: border-box;
-  box-sizing: border-box;
-}
-:focus,
-:active {
-  outline: none;
-}
-a:focus,
-a:active {
-  outline: none;
-}
-aside,
-nav,
-footer,
-header,
-section {
-  display: block;
-}
-html,
-body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  min-width: $minwidth;
-  position: relative;
-  width: 100%;
-  color: #000;
-}
+// <ПОДКЛЮЧЕНИЕ ШРИФТОВ>
 
-body {
-  font-size: 100%;
-  line-height: 1;
-  font-size: 14px;
-  font-family: $fontfamily;
-  -ms-text-size-adjust: 100%;
-  -moz-text-size-adjust: 100%;
-  -webkit-text-size-adjust: 100%;
-  &.lock {
-    overflow: hidden;
-    @media (max-width: $md3+px) {
-      width: 100%;
-      position: fixed;
-      overflow: hidden;
-    }
-  }
-}
+// </ПОДКЛЮЧЕНИЕ ШРИФТОВ>
 
-input,
-button,
-textarea {
-  font-family: $fontfamily;
-}
-input::-ms-clear {
-  display: none;
-}
-button {
-  cursor: pointer;
-}
-button::-moz-focus-inner {
-  padding: 0;
-  border: 0;
-}
-a,
-a:visited {
-  text-decoration: none;
-}
-a:hover {
-  text-decoration: none;
-}
-ul li {
-  list-style: none;
-}
-img {
-  vertical-align: top;
-}
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-weight: inherit;
-  font-size: inherit;
-}
-//</ОБНУЛЕНИЕ, ОБЩИЕ ПАРАМЕТРЫ>
+//<ШРИФТ ПО УМОЛЧАНИЮ>
+$fontFamily: "";
+//</ШРИФТ ПО УМОЛЧАНИЮ>
 
-//<ДОП ПАРАМЕТРЫ>
-
-//  Scrollbar =================================
-
-body {
-  &::-webkit-scrollbar {
-    width: 15px;
-  }
-  &::-webkit-scrollbar-track {
-    background: #d4d4d4;
-    box-shadow: 0 0 2px rgba(0, 0, 0, 0.2) inset;
-  }
-  &::-webkit-scrollbar-thumb {
-    background: #939393;
-    border-radius: 8px;
-    border: 3px solid #d4d4d4;
-  }
-  &::-webkit-scrollbar-thumb:hover {
-    background: #7c7c7c;
-  }
-}
-
-//</ДОП ПАРАМЕТРЫ>
+//<ПОДКЛЮЧЕНИЕ ОБЯЗАТЕЛЬНЫХ SCSS КОМПОНЕНТОВ>
+@import "./common/null.scss";
+@import "./common/mixins.scss";
+//</ПОДКЛЮЧЕНИЕ ОБЯЗАТЕЛЬНЫХ SCSS КОМПОНЕНТОВ>
 
 //<ОБОЛОЧКА>
 .wrapper {
   width: 100%;
   min-height: 100%;
   overflow: hidden;
-
-	position: relative;
-	
+  position: relative;
+  display: flex;
+  flex-direction: column;
   &.loaded {
   }
 }
@@ -185,27 +36,26 @@ body {
 
 //<ОСНОВНАЯ СЕТКА>
 .container {
-  max-width: $mw + px;
+  max-width: $maxWidthContainer + px;
   margin: 0 auto;
   width: 100%;
   padding: 0 15px;
 }
 //</ОСНОВНАЯ СЕТКА>
 
-//<ПОДКЛЮЧЕНИЕ ФАЙЛОВ СТИЛЕЙ ЭЛЕМЕНТОВ>
-@import "header.scss";
-@import "intro.scss";
-@import "services.scss";
-@import "blog.scss";
-@import "footer.scss";
-//</ПОДКЛЮЧЕНИЕ ФАЙЛОВ СТИЛЕЙ ЭЛЕМЕНТОВ>
+//<ПОДКЛЮЧЕНИЕ СТРАНИЦ>
 
-//<ПОДКЛЮЧЕНИЕ ДОП СТРАНИЦ(для многостраничников)>
+// Index
+@import "./index/header.scss";
+@import "./index/intro.scss";
+@import "./index/services.scss";
+@import "./index/blog.scss";
+@import "./index/footer.scss";
 
-//</ПОДКЛЮЧЕНИЕ ДОП СТРАНИЦ>
+//<ПОДКЛЮЧЕНИЕ СТРАНИЦ>
 
-//<ПОДКЛЮЧЕНИЕ ДОП КЛАССОВ>
-@import "common-classes.scss";
-@import "forms.scss";
-@import "sliders.scss";
-//<ПОДКЛЮЧЕНИЕ ДОП КЛАССОВ>
+//<ПОДКЛЮЧЕНИЕ ОБЩИХ СТИЛЕЙ>
+@import "./common/common-classes.scss";
+@import "./common/forms.scss";
+@import "./common/sliders.scss";
+//<ПОДКЛЮЧЕНИЕ ОБЩИХ СТИЛЕЙ>

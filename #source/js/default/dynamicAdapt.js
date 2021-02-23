@@ -21,7 +21,7 @@ DynamicAdapt.prototype.init = function () {
 	// наполнение оbjects объктами
 	for (let i = 0; i < this.nodes.length; i++) {
 		const node = this.nodes[i];
-		const data = node.dataset.da.trim();
+		const data = node.dataset.move.trim();
 		const dataArray = data.split(",");
 		const оbject = {};
 		оbject.element = node;
